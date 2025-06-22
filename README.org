@@ -12,6 +12,31 @@ D. Bourke in F77.[fn:1]
  I would call the algorithm ~marching squares~ as it resembles the
  ~marching cubes~ for 3D data sets.[fn:2] Compute/find iso-lines/contours.
 
+** Code
+As of now, it comprises two files: the main function =contour.f90= and
+the library =contour_lib.f90= that contains the necessary functions.
+
+* Compile, link and test.
+
+The following is a simple, manual procedure to create the executable
+program with GCC gfortran. TODO: prepare /make/ or /cmake/ scripts.
+
+#+begin_src sh :dir ./source :results output
+# I use Environment Modules to organize my work.
+module is-loaded gcc || module load gcc
+
+# compile the library file:
+gfortran -Wall -O2 -c contour_lib.f90
+
+# Compile the main function
+OPT=(-cpp -O2 -Wall)
+# OPT+=(-v -DDEBUG -fcheck=all)
+gfortran "${OPT[@]}" -c contour.f90
+
+# link the objects
+gfortran -o exmple1.x  contour_lib.o  contour.o
+#+end_src
+
 
 * Footnotes
 
