@@ -1,0 +1,9 @@
+# ----
+
+# Do not stage executables, modules not objects files
+*.x
+*.mod
+*.o
+
+# BTA :: use this directory to write the stderr and stdout files from test jobs.
+log/*
