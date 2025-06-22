@@ -48,6 +48,7 @@ subroutine conrec(d,ilb,iub,jlb,jub,x,y,nc,z)
         dmax = max(d(i,j),d(i,j+1),d(i+1,j),d(i+1,j+1))
 
         BTA: if (dmax.ge.z(1) .and. dmin.le.z(nc)) then
+
            CONTOUR: do k=1,nc
               if (z(k).ge.dmin .and. z(k).le.dmax) then
                  do m=4,0,-1
@@ -100,88 +101,78 @@ subroutine conrec(d,ilb,iub,jlb,jub,x,y,nc,z)
                  DO60:  do m=1,4
                     m1=m
                     m2=0
-                    if (m.ne.4) then
-                       m3=m+1
-                    else
-                       m3=1
-                    endif
+                    m3=1
+                    if (m .ne. 4) m3 = m + 1
+
                     case = castab(sh(m1),sh(m2),sh(m3))
-                    if (case.ne.0) then
-                       goto (31,32,33,34,35,36,37,38,39), case
-                       !
-                       !     Case 1 - Line between vertices 1 and 2
-                       !
-31                     x1=xh(m1)
+
+                    select case (case)
+
+                    case(0)
+                       cycle DO60
+
+                    case (1) ! Case 1 - Line between vertices 1 and 2
+                       x1=xh(m1)
                        y1=yh(m1)
                        x2=xh(m2)
                        y2=yh(m2)
-                       goto 40
-                       !
-                       !     Case 2 - Line between vertices 2 and 3
-                       !
-32                     x1=xh(m2)
+
+                    case (2) ! Case 2 - Line between vertices 2 and 3
+                       x1=xh(m2)
                        y1=yh(m2)
                        x2=xh(m3)
                        y2=yh(m3)
-                       goto 40
-                       !
-                       !     Case 3 - Line between vertices 3 and 1
-                       !
-33                     x1=xh(m3)
+
+                    case (3) ! Case 3 - Line between vertices 3 and 1
+                       x1=xh(m3)
                        y1=yh(m3)
                        x2=xh(m1)
                        y2=yh(m1)
-                       goto 40
-                       !
-                       !     Case 4 - Line between vertex 1 and side 2-3
-                       !
-34                     x1=xh(m1)
+
+                    case (4) ! Case 4 - Line between vertex 1 and side 2-3
+                       x1=xh(m1)
                        y1=yh(m1)
                        x2=xsect(m2,m3)
                        y2=ysect(m2,m3)
-                       goto 40
-                       !
-                       !     Case 5 - Line between vertex 2 and side 3-1
-                       !
-35                     x1=xh(m2)
+
+                    case (5) ! Case 5 - Line between vertex 2 and side 3-1
+                       x1=xh(m2)
                        y1=yh(m2)
                        x2=xsect(m3,m1)
                        y2=ysect(m3,m1)
-                       goto 40
-                       !
-                       !     Case 6 - Line between vertex 3 and side 1-2
-                       !
-36                     x1=xh(m3)
+
+                    case (6) ! Case 6 - Line between vertex 3 and side 1-2
+                       x1=xh(m3)
                        y1=yh(m3)
                        x2=xsect(m1,m2)
                        y2=ysect(m1,m2)
-                       goto 40
-                       !
-                       !     Case 7 - Line between sides 1-2 and 2-3
-                       !
-37                     x1=xsect(m1,m2)
+
+                    case (7) ! Case 7 - Line between sides 1-2 and 2-3
+                       x1=xsect(m1,m2)
                        y1=ysect(m1,m2)
                        x2=xsect(m2,m3)
                        y2=ysect(m2,m3)
-                       goto 40
-                       !
-                       !     Case 8 - Line between sides 2-3 and 3-1
-                       !
-38                     x1=xsect(m2,m3)
+
+                    case (8) ! Case 8 - Line between sides 2-3 and 3-1
+                       x1=xsect(m2,m3)
                        y1=ysect(m2,m3)
                        x2=xsect(m3,m1)
                        y2=ysect(m3,m1)
-                       goto 40
-                       !
-                       !     Case 9 - Line between sides 3-1 and 1-2
-                       !
-39                     x1=xsect(m3,m1)
+
+                    case (9) ! Case 9 - Line between sides 3-1 and 1-2
+                       x1=xsect(m3,m1)
                        y1=ysect(m3,m1)
                        x2=xsect(m1,m2)
                        y2=ysect(m1,m2)
-                       goto 40
-40                     call vecout(x1,y1,x2,y2,z(k))
-                    endif
+
+                    case default
+                       print *, " Something went wrong - IMPOSIBLE CASE: ", case
+                       call exit(1)
+
+                    end select
+
+                    call vecout(x1,y1,x2,y2,z(k))
+
                  end do DO60  ! 60 continue
               endif
            end do CONTOUR
