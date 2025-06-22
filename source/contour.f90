@@ -1,4 +1,5 @@
 program demo
+  use common, only : d, x, y, z
   implicit none
   !
 
@@ -9,11 +10,6 @@ program demo
   integer, parameter :: nx = 300, ny = 250 ! number of grid points, nx_by_ny
   integer, parameter :: nc = 10  ! number of countours
 
-  real, dimension(0:nx) :: x
-  real, dimension(0:ny) :: y
-  real, dimension(0:nx,0:ny) :: d
-  real, dimension(0:nc) :: z
-
   real ::  x1,y1,x2,y2
   real :: zmax,zmin
   integer :: i,j
@@ -21,6 +17,12 @@ program demo
   real :: a, b, c  ! The slopes of the linear interpolation for x and y
 
   ! ---
+
+  allocate(d(0:nx, 0:ny))
+  allocate(x(0:nx))
+  allocate(y(0:ny))
+  allocate(z(0:nc))
+
 
   !
   !     Set coordinates in Y array suitable for
