@@ -1,0 +1,14 @@
+#+TITLE: contour - A Fortran program to trace isolines/contours in a 2D data map.
+
+* Credit
+This repository is intended for my personal exercise, study and
+discovery. The code herein used was originally written  Paul D. Bourke.[fn:1]
+
+* Introduction
+
+ I'd call the algorithm 'marching squares' as it resembles the
+ 'marching cubes' for 3D data sets. Compute/find iso-lines/contours.
+
+* Footnotes
+
+[fn:1] https://paulbourke.net/papers/conrec/
