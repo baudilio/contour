@@ -216,7 +216,7 @@ subroutine vecout(x1,y1,x2,y2,z)
 
   !BTA just write the args:
   write(*,100) x1,y1,x2,y2,z
-100 format(4F12.4,F14.3)
-100 format(4F12.4,F14.3)
+
+100 format("(",F8.4,',',F8.4,") to (",F8.4,',',F8.4,")    ",F10.3)
 
 end subroutine vecout
