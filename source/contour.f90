@@ -23,7 +23,6 @@ program demo
   allocate(y(0:ny))
   allocate(z(0:nc))
 
-
   !
   !     Set coordinates in Y array suitable for
   !     automatic plotting on the graphics screen
@@ -92,8 +91,10 @@ program demo
   !     Call the contouring routine
   !
 #ifndef DEBUG
-  call conrec(d,0,nx,0,ny,x,y,nc,z)
+  ! call conrec(d,0,nx,0,ny,x,y,nc,z)
+  call conrec()
 #endif
+
 
   stop 0
 end program demo

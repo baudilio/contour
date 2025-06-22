@@ -1,13 +1,14 @@
-subroutine conrec(d,ilb,iub,jlb,jub,x,y,nc,z)
+! subroutine conrec(d,ilb,iub,jlb,jub,x,y,nc,z)
+subroutine conrec()
+  use common, only : d, &  ! the data (values) in the grid, d := f(x,y)
+       x, y, & ! the coordinates of the data points
+       z ! the array of the contours
   implicit none
 
-  ! -- Dummy arguments
-  integer, intent(in) :: ilb,iub, jlb,jub
-  real, dimension(ilb:iub) :: x
-  real, dimension(jlb:jub) :: y
-  real, dimension(ilb:iub,jlb:jub) :: d
-  integer, intent(in) :: nc
-  real, dimension(1:nc) :: z
+  ! -- Local varaibles
+  integer :: ilb,iub, jlb,jub
+  integer :: nc
+  ! real, dimension(1:nc) :: z
 
   !
   ! -- Local varaibles
@@ -17,6 +18,7 @@ subroutine conrec(d,ilb,iub,jlb,jub,x,y,nc,z)
   real, dimension(0:4) :: xh, yh
   real :: x1,x2,y1,y2
 
+  !    Data
   integer, parameter, dimension(1:4) :: im = [0, 1, 1, 0]
   integer, parameter, dimension(1:4) :: jm = [0, 0, 1, 1]
   integer, parameter, dimension(-1:1,-1:1,-1:1) :: castab = reshape([ &
@@ -24,19 +26,32 @@ subroutine conrec(d,ilb,iub,jlb,jub,x,y,nc,z)
        0,3,6,  2,3,2,  6,3,0, &
        8,4,7,  5,1,0,  9,0,0 ], shape(castab))
 
-  integer :: case
-  integer :: i,j,k,m, m1,m2,m3
-  real :: dmin, dmax
-
   !
   !     Use statement functions for the line intersections
-  !
+  !     BTA: OK - but obsolete prog. style. Funcs. to move into a module.
   integer :: p1,p2
   real :: xsect, ysect
   xsect(p1,p2) = (h(p2)*xh(p1) - h(p1)*xh(p2)) / (h(p2)-h(p1))
   ysect(p1,p2) = (h(p2)*yh(p1)-h(p1)*yh(p2))/(h(p2)-h(p1))
 
+  !
+  integer :: case
+  integer :: i,j,k,m, m1,m2,m3
+  real :: dmin, dmax
+
+
   ! ====
+
+  ilb = lbound(d, dim=1)
+  iub = ubound(d, dim=1)
+  jlb = lbound(d, dim=2)
+  jub = ubound(d, dim=2)
+  nc = ubound(z, dim=1)
+
+#ifdef DEBUG
+  print *, "Arrays indices bounds:"
+  print '(I0,":",I0,", ",I0,":",I0, "and z: ", I0)', ilb,iub,jlb,jub,nc
+#endif
 
   !
   !     Scan the arrays, top down, left to right within rows
@@ -183,7 +198,7 @@ subroutine conrec(d,ilb,iub,jlb,jub,x,y,nc,z)
 
 end subroutine conrec
 
-!
+
 !======================================================================
 !
 !     This is a sample vector output routine. For a local environment
@@ -198,29 +213,10 @@ end subroutine conrec
 subroutine vecout(x1,y1,x2,y2,z)
   implicit none
   real, intent(in) :: x1,y1,x2,y2,z
-  !
-  !***** Replace from here *************************
-  !
-  !     The following should be ignored since it is specific to
-  !     the version of FORTRAN running on the Macintosh microcomputer
-  !     on which this particular example was written.
-  !
-  !bta      INTEGER LINETO
-  !bta      PARAMETER (LINETO=Z'89109000')
-  !bta      INTEGER MOVETO
-  !bta      PARAMETER (MOVETO=Z'89309000')
-  integer, parameter :: LINETO = int(Z'89109000')
-  integer, parameter :: MOVETO = int(Z'89309000')
-  !bta      call toolbx(MOVETO,nint(x1),nint(y1))
-  !bta      call toolbx(LINETO,nint(x2),nint(y2))
-  !BTA: these may be calls to plotting lib (PGPlot, PLPlot, etc) functions.
-  !
-  !***** To here ************************************
-  !
+
   !BTA just write the args:
   write(*,100) x1,y1,x2,y2,z
 100 format(4F12.4,F14.3)
-
-  return
+100 format(4F12.4,F14.3)
 
 end subroutine vecout
